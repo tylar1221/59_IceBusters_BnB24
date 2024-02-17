@@ -186,15 +186,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </p>
 
                                 <div class="align-items-center d-flex">
-                                    <button type="submit" class="btn btn-primary ms-auto">
-                                        Register    
-                                    </button>
+                                <a href="http://localhost/LOGINp/59_IceBusters_BnB24/index.html" class="btn btn-primary ms-auto">Register</a>
+
                                 </div>
                             </form>
                         </div>
                         <div class="card-footer py-3 border-0">
                             <div class="text-center">
-                                Already have an account? <a href="http://localhost/LOGINp/doc_log.php" class="text-dark">Login</a>
+                                Already have an account? <a href="http://localhost/LOGINp/59_IceBusters_BnB24/doct_reg.php" class="text-dark">Login</a>
                             </div>
                         </div>
                     </div>

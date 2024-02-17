@@ -147,7 +147,7 @@ if (isset($_POST['name'])) {
     <script>
     // Function to redirect to the next page after successful form submission
     function redirectToNextPage() {
-        window.location.href = "reg.html"; // Replace "reg.html" with the URL of your next page
+        window.location.href = "index.html"; // Replace "reg.html" with the URL of your next page
     }
 
     // Add event listener to the button
