@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Doctor Registration</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+</head>
+<style>
+    body {
+        background-image: url('Image/docsBlur.jpg');
+        background-size: cover;
+        background-position: center;
+    }
+    
+    body::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 255, 0.8);
+    }
+</style>
+
+<body>
+    <section class="h-100">
+        <div class="container h-100">
+            <div class="row justify-content-sm-center h-100">
+                <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
+                    <div class="text-center my-5">
+                    </div>
+                    <div class="card shadow-lg">
+                        <div class="card-body p-5">
+                            <h1 class="fs-4 card-title fw-bold mb-4">Book Appointment</h1>
+                            <hr>
+                            <form method="POST" class="needs-validation" novalidate="" autocomplete="off" enctype="multipart/form-data">
+                                <div class="mb-3">
+                                    <label class="mb-2 text-muted" for="drName">DR. Name</label>
+                                    <select class="form-select" name="drName" required>
+                                        <option value="">Select DR. Name</option>
+                                        <option value="Dr. Mishra">Dr. Mishra</option>
+                                        <option value="Dr. Khan">Dr. Khan</option>
+                                        <option value="Dr. Reddy">Dr. Reddy</option>
+                                        <option value="Dr. Joshi">Dr. Joshi</option>
+                                        <!-- Add more DR. Names as needed -->
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        DR. Name is required
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="mb-2 text-muted" for="description">Description</label>
+                                    <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                                    <div class="invalid-feedback">
+                                        Description is required
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="mb-2 text-muted" for="date">Date</label>
+                                    <input id="date" type="date" class="form-control" name="date" required>
+                                    <div class="invalid-feedback">
+                                        Date is required
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="mb-2 text-muted" for="timeSlot">Time Slot</label>
+                                    <input type="time" class="form-control" name="timeSlot" required>
+                                    <div class="invalid-feedback">
+                                        Time Slot is required
+                                    </div>
+                                </div>
+
+
+
+                                <p class="form-text text-muted mb-3">
+                                    By Booking you agree with our terms and condition.
+                                </p>
+                                <hr>
+                                <div class="align-items-center d-flex">
+                                    <button type="button" class="btn btn-primary ms-auto" onclick="registerDoctor()">
+                                        Book
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- <div class="card-footer py-3 border-0">
+                            <div class="text-center">
+                                Already have an account? <a href="index.html" class="text-dark">Login</a>
+                            </div>
+                        </div> -->
+                    </div>
+                    <div class="text-center mt-5 text-muted">
+                        Copyright &copy; 2017-2021 &mdash; Your Company
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="js/login.js"></script>
+    <script>
+        function registerDoctor() {
+            const drNameSelect = document.querySelector('[name="drName"]');
+            const timeSlotInput = document.querySelector('[name="timeSlot"]');
+            const descriptionTextarea = document.querySelector('[name="description"]');
+
+            const selectedDrName = drNameSelect.value;
+            const selectedTimeSlot = timeSlotInput.value;
+            const description = descriptionTextarea.value;
+
+            if (isValidInput(selectedDrName, selectedTimeSlot)) {
+                if (!isEntryExists(selectedDrName, selectedTimeSlot)) {
+                    alert('Registration successful!');
+                } else {
+                    alert('Entry with the same DR. Name and Time Slot already exists. Please choose a different combination.');
+                }
+            } else {
+                alert('Please fill out all required fields.');
+            }
+        }
+
+        function isValidInput(drName, timeSlot) {
+            return drName.trim() !== '' && timeSlot.trim() !== '';
+        }
+
+        function isEntryExists(drName, timeSlot) {
+            const existingEntries = [{
+                    drName: 'Dr. Mishra',
+                    timeSlot: '10:00 AM'
+                }, {
+                    drName: 'Dr. Khan',
+                    timeSlot: '11:30 AM'
+                }, {
+                    drName: 'Dr. Reddy',
+                    timeSlot: '2:00 PM'
+                }, {
+                    drName: 'Dr. Joshi',
+                    timeSlot: '4:30 PM'
+                },
+                // Add more entries as needed
+            ];
+
+            return existingEntries.some(entry => entry.drName === drName && entry.timeSlot === timeSlot);
+        }
+    </script>
+</body>
+
+</html>

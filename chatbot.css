@@ -1,0 +1,153 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Poppins:wght@200;300&display=swap");
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background: #4b5c66;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    /* Remove default body margin */
+}
+
+.container {
+    --light-color: #fff;
+    max-width: 600px;
+    /* Adjust the max-width to your preference */
+    width: 100%;
+    /* Ensure container takes full width */
+    background: var(--light-color);
+    position: relative;
+    box-shadow: 0px 0px 15px 0px black;
+    border-radius: 15px;
+    /* Add border-radius for a rounded appearance */
+    overflow: hidden;
+    /* Hide overflowing content */
+}
+
+
+/* Rest of your styles... */
+
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Poppins:wght@200;300&display=swap");
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background: #4b5c66;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    --light-color: #fff;
+    max-width: 100%;
+    background: var(--light-color);
+    position: relative;
+    box-shadow: 0px 0px 15px 0px black;
+}
+
+.chat-header {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0px 30px;
+    background-color: #0652c0;
+    color: var(--light-color);
+    font-size: 1.5rem;
+}
+
+.chat-header .logo {
+    height: 35px;
+    width: 35px;
+    box-shadow: 0px 0px 10px 0px black;
+}
+
+.chat-header img {
+    height: 100%;
+    width: 100%;
+}
+
+.chat-header .title {
+    padding-left: 10px;
+}
+
+.chat-body {
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    padding: 8px 10px;
+    overflow-y: auto;
+}
+
+.chat-input {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    border-top: 1px solid #ccc;
+}
+
+.input-sec {
+    flex: 9;
+}
+
+.send {
+    flex: 1;
+    padding-right: 4px;
+}
+
+#txtInput {
+    line-height: 30px;
+    padding: 8px 10px;
+    border: none;
+    outline: none;
+    caret-color: black;
+    font-size: 1rem;
+    width: 100%;
+}
+
+.chatbot-message,
+.user-message {
+    padding: 8px;
+    background: #ccc;
+    margin: 5px;
+    max-width: calc(100% - 20px);
+    /* Adjusted max-width */
+    border-radius: 10px 3px 10px 10px;
+    word-wrap: break-word;
+    /* Added to allow words to break */
+}
+
+.chatbot-message {
+    background: #0652c0;
+    color: var(--light-color);
+    align-self: flex-start;
+    border-radius: 10px 10px 3px 10px;
+}
+
+body {
+    background-image: url('Image/docsBlur.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 255, 0.8);
+}
