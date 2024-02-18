@@ -61,6 +61,7 @@ $conn->close();
 body {
     background-color: hsl(217, 0%, 16%);
     padding: 50px;
+    background image;image/docsblus: .jpg;
 }
 
     </style>
