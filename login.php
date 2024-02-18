@@ -1,36 +1,37 @@
 <?php
-session_start(); // Start the session
+session_start();
 
-if(isset($_POST['login'])) {
+if (isset($_POST['email']) && isset($_POST['password'])) {
     $server = "localhost";
     $username = "root";
     $password = "";
-    $database = "patient_db
-    ";
+    $database = "patient_db";
 
-    $con = mysqli_connect($server, $username, $password, $database);
+    $conn = new mysqli($server, $username, $password, $database);
 
-    if (!$con) {
-        die("Connection failed: " . mysqli_connect_error());
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
     }
 
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $sql = "SELECT * FROM patient WHERE email='$email' AND password='$password'";
-    $result = mysqli_query($con, $sql);
+    $sql = "SELECT * FROM patient WHERE email=? AND password=?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $email, $password);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    if(mysqli_num_rows($result) == 1) {
-        // Login successful
+    if ($result->num_rows == 1) {
         $_SESSION['email'] = $email;
         header("Location: pat_prof.php");
         exit();
     } else {
-        // Login failed
-        echo "<script>alert('Invalid email or password');</script>";
+        echo "Invalid email or password";
     }
 
-    mysqli_close($con);
+    $stmt->close();
+    $conn->close();
 }
 ?>
 
@@ -105,15 +106,16 @@ if(isset($_POST['login'])) {
                                         <input type="checkbox" name="remember" id="remember" class="form-check-input">
                                         <label for="remember" class="form-check-label">Remember Me</label>
                                     </div>
-                                    <button type="button" onclick="validateLoginForm()" class="btn btn-primary ms-auto" name="login">
+                                    <button type="submit" class="btn btn-primary ms-auto" name="login">
                                         Login
                                     </button>
+
                                 </div>
                             </form>
                         </div>
                         <div class="card-footer py-3 border-0">
                             <div class="text-center">
-                                Don't have an account? <a href="http://localhost/LOGINp/p_reg.php" class="text-dark">Create One</a>
+                                Don't have an account? <a href="http://localhost/LOGINp/59_IceBusters_BnB24/p_reg.php" class="text-dark">Create One</a>
                             </div>
                         </div>
                     </div>
@@ -142,27 +144,6 @@ if(isset($_POST['login'])) {
                 alert("Password is required");
                 return;
             }
-
-            // Check if email and password exist in patient table
-            // Using AJAX to send a request to check_login.php
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        if (xhr.responseText === "success") {
-                            // Redirect to profile page
-                            window.location.href = "/pat_prof.php";
-                        } else {
-                            alert("Invalid email or password");
-                        }
-                    } else {
-                        alert("Error: " + xhr.status);
-                    }
-                }
-            };
-            xhr.open("POST", "check_login.php", true);
-            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhr.send("email=" + email + "&password=" + password);
         }
     </script>
 </body>

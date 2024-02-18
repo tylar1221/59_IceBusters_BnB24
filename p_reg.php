@@ -131,7 +131,7 @@ if (isset($_POST['name'])) {
                         </div>
                         <div class="card-footer py-3 border-0">
                             <div class="text-center">
-                                Already have an account? <a href="http://localhost/LOGINp/login.php" class="text-dark">Login</a>
+                                Already have an account? <a href="http://localhost/LOGINp/59_IceBusters_BnB24/login.php" class="text-dark">Login</a>
                             </div>
                         </div>
                     </div>

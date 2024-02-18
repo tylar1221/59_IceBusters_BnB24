@@ -1,42 +1,38 @@
 <?php
-// Start session to access session variables
 session_start();
 
-// Check if user is logged in, otherwise redirect to login page
-if (!isset($_SESSION['user_email'])) {
-    header("Location: http://localhost/LOGINp/login.php");
+// Check if user is not logged in, redirect to login page
+if (!isset($_SESSION['email'])) {
+    header("Location: login.php");
     exit();
 }
 
-$servername = "localhost"; // Change this to your database server name if it's different
-$username = "root"; // Change this to your database username
-$password = ""; // Change this to your database password if you have one
-$database = "patient_db"; // Change this to your database name
+// Fetch user details from the session
+$email = $_SESSION['email'];
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+// Connect to the database
+$servername = "localhost";
+$username = "root";
+$password = "";
+$database = "patient_db";
+
+$conn = new mysqli($servername, $username, $password, $database);
 
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Retrieve user data based on user type (patient)
-$email = $_SESSION['email'];
+// Prepare SQL statement to fetch user details
+$sql = "SELECT * FROM patient WHERE email=?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$result = $stmt->get_result();
 
-if ($user_type == "patient") {
-    $sql = "SELECT * FROM patient WHERE email = '$user_email'";
-} else {
-    // Redirect other user types to an appropriate page or display an error
-    header("Location: error.php");
-    exit();
-}
-
-$result = mysqli_query($conn, $sql);
-
-// Check if data was fetched successfully
-if ($result && mysqli_num_rows($result) > 0) {
-    $row = mysqli_fetch_assoc($result);
-    // Extract user data
+// Check if user details are found
+if ($result->num_rows == 1) {
+    $row = $result->fetch_assoc();
     $name = $row['name'];
     $email = $row['email'];
     // Add more fields as needed
@@ -46,7 +42,8 @@ if ($result && mysqli_num_rows($result) > 0) {
 }
 
 // Close database connection
-mysqli_close($conn);
+$stmt->close();
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -55,12 +52,31 @@ mysqli_close($conn);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        /* Add custom styles here */
+        /* Add custom styles here */
+body {
+    background-color: hsl(217, 0%, 16%);
+    padding: 50px;
+}
+
+    </style>
 </head>
 <body>
-    <h1>Welcome to Your Profile</h1>
-    <p>Name: <?php echo $name; ?></p>
-    <p>Email: <?php echo $email; ?></p>
-    <!-- Add more fields as needed -->
-    <a href="logout.php">Logout</a>
+    <div class="container">
+        <h1 class="mb-4">Welcome to Your Profile</h1>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Profile Details</h5>
+                <p class="card-text">Name: <?php echo $name; ?></p>
+                <p class="card-text">Email: <?php echo $email; ?></p>
+                <!-- Add more fields as needed -->
+                <a href="logout.php" class="btn btn-primary">Logout</a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

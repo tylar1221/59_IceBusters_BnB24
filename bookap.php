@@ -1,10 +1,41 @@
+<?php
+// Database connection
+$servername = "localhost";
+$username = "root";
+$password = "";
+$database = "patient_db"; // Change to your actual database name
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $database);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch doctor names from the database
+$sql = "SELECT name FROM doctor"; // Assuming your table name is 'doctors' and the column is 'name'
+$result = $conn->query($sql);
+
+// Store doctor names in an array
+$doctors = [];
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        $doctors[] = $row['name'];
+    }
+}
+
+// Close database connection
+$conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Doctor Registration</title>
+    <title>Book Appointment</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
 </head>
 <style>
@@ -38,24 +69,22 @@
                             <hr>
                             <form method="POST" class="needs-validation" novalidate="" autocomplete="off" enctype="multipart/form-data">
                                 <div class="mb-3">
-                                    <label class="mb-2 text-muted" for="drName">DR. Name</label>
-                                    <select class="form-select" name="drName" required>
-                                        <option value="">Select DR. Name</option>
-                                        <option value="Dr. Mishra">Dr. Mishra</option>
-                                        <option value="Dr. Khan">Dr. Khan</option>
-                                        <option value="Dr. Reddy">Dr. Reddy</option>
-                                        <option value="Dr. Joshi">Dr. Joshi</option>
-                                        <!-- Add more DR. Names as needed -->
+                                    <label class="mb-2 text-muted" for="name">Doctor Name</label>
+                                    <select class="form-select" name="name" required>
+                                        <option value="">Select Doctor Name</option>
+                                        <?php foreach($doctors as $doctor): ?>
+                                            <option value="<?php echo $doctor; ?>"><?php echo $doctor; ?></option>
+                                        <?php endforeach; ?>
                                     </select>
                                     <div class="invalid-feedback">
-                                        DR. Name is required
+                                        Doctor Name is required
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="mb-2 text-muted" for="description">Description</label>
-                                    <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                                    <label class="mb-2 text-muted" for="symptoms">Patient Symptoms</label>
+                                    <textarea class="form-control" id="symptoms" name="symptoms" rows="3" required></textarea>
                                     <div class="invalid-feedback">
-                                        Description is required
+                                        Patient Symptoms are required
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -72,25 +101,17 @@
                                         Time Slot is required
                                     </div>
                                 </div>
-
-
-
                                 <p class="form-text text-muted mb-3">
                                     By Booking you agree with our terms and condition.
                                 </p>
                                 <hr>
                                 <div class="align-items-center d-flex">
-                                    <button type="button" class="btn btn-primary ms-auto" onclick="registerDoctor()">
+                                    <button type="button" class="btn btn-primary ms-auto" onclick="bookAppointment()">
                                         Book
                                     </button>
                                 </div>
                             </form>
                         </div>
-                        <!-- <div class="card-footer py-3 border-0">
-                            <div class="text-center">
-                                Already have an account? <a href="index.html" class="text-dark">Login</a>
-                            </div>
-                        </div> -->
                     </div>
                     <div class="text-center mt-5 text-muted">
                         Copyright &copy; 2017-2021 &mdash; Your Company
@@ -100,50 +121,39 @@
         </div>
     </section>
 
-    <script src="js/login.js"></script>
     <script>
-        function registerDoctor() {
-            const drNameSelect = document.querySelector('[name="drName"]');
+        function bookAppointment() {
+            const drNameSelect = document.querySelector('[name="name"]');
+            const symptomsTextarea = document.querySelector('[name="symptoms"]');
+            const dateInput = document.querySelector('[name="date"]');
             const timeSlotInput = document.querySelector('[name="timeSlot"]');
-            const descriptionTextarea = document.querySelector('[name="description"]');
 
             const selectedDrName = drNameSelect.value;
-            const selectedTimeSlot = timeSlotInput.value;
-            const description = descriptionTextarea.value;
+            const symptoms = symptomsTextarea.value;
+            const date = dateInput.value;
+            const timeSlot = timeSlotInput.value;
 
-            if (isValidInput(selectedDrName, selectedTimeSlot)) {
-                if (!isEntryExists(selectedDrName, selectedTimeSlot)) {
-                    alert('Registration successful!');
+            if (isValidInput(selectedDrName, symptoms, date, timeSlot)) {
+                if (!isEntryExists(selectedDrName, date, timeSlot)) {
+                    alert('Appointment booked successfully!');
                 } else {
-                    alert('Entry with the same DR. Name and Time Slot already exists. Please choose a different combination.');
+                    alert('Appointment with the same Doctor, Date, and Time Slot already exists. Please choose a different combination.');
                 }
             } else {
                 alert('Please fill out all required fields.');
             }
         }
 
-        function isValidInput(drName, timeSlot) {
-            return drName.trim() !== '' && timeSlot.trim() !== '';
+        function isValidInput(drName, symptoms, date, timeSlot) {
+            return drName.trim() !== '' && symptoms.trim() !== '' && date.trim() !== '' && timeSlot.trim() !== '';
         }
 
-        function isEntryExists(drName, timeSlot) {
-            const existingEntries = [{
-                    drName: 'Dr. Mishra',
-                    timeSlot: '10:00 AM'
-                }, {
-                    drName: 'Dr. Khan',
-                    timeSlot: '11:30 AM'
-                }, {
-                    drName: 'Dr. Reddy',
-                    timeSlot: '2:00 PM'
-                }, {
-                    drName: 'Dr. Joshi',
-                    timeSlot: '4:30 PM'
-                },
-                // Add more entries as needed
-            ];
-
-            return existingEntries.some(entry => entry.drName === drName && entry.timeSlot === timeSlot);
+        function isEntryExists(drName, date, timeSlot) {
+            // Here you can check if the entry already exists in your database
+            // Example:
+            // You can send an AJAX request to your server to check if an entry with the same doctor, date, and time slot exists in your database
+            // If it exists, return true; otherwise, return false.
+            return false; // Placeholder return value
         }
     </script>
 </body>
