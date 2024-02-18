@@ -1,14 +1,13 @@
 <?php
-// Check if the form is submitted
+$insert = false;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Establish database connection (replace with your credentials)
-    $servername = "localhost";
+    $server = "localhost";
     $username = "root";
     $password = "";
-    $dbname = "patient_db";
+    $database = "patient_db";
 
     // Create connection
-    $conn = new mysqli($servername, $username, $password, $dbname);
+    $conn = new mysqli($server, $username, $password, $database);
 
     // Check connection
     if ($conn->connect_error) {
@@ -24,16 +23,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $license = $_POST['license'];
     $specialization = $_POST['specialization'];
     $experience = $_POST['experience'];
+    $password = $_POST['password'];
 
     // Perform server-side validation (you can add more validation as needed)
-    if (empty($name) || empty($gender) || empty($date) || empty($email) || empty($number) || empty($license) || empty($specialization) || empty($experience)) {
+    if (empty($name) || empty($gender) || empty($date) || empty($email) || empty($number) || empty($license) || empty($specialization) || empty($experience) || empty($password)) {
         $error_message = "All fields are required";
     } else {
+
         // Prepare and execute SQL statement to insert data into the database
-        $stmt = $conn->prepare("INSERT INTO `doctor` (`name`, `gender`, `date`, `email`, `number`, `license`, `specialization`, `certificates`, `experience`, `photo`) VALUES (?, ?, ?, ?, ?, ?, ?, '', ?, '');");
-        $stmt->bind_param("ssssssss", $name, $gender, $date, $email, $number, $license, $specialization, $experience);
+        $stmt = $conn->prepare("INSERT INTO `doctor` (`name`, `gender`, `date`, `email`, `number`, `license`, `specialization`, `certificates`, `experience`, `photo`, `password`) VALUES (?, ?, ?, ?, ?, ?, ?, '', ?, '', ?)");
+        $stmt->bind_param("sssssssss", $name, $gender, $date, $email, $number, $license, $specialization, $experience, $password);
 
         if ($stmt->execute()) {
+            $insert = true;
             $success_message = "Doctor registered successfully";
         } else {
             $error_message = "Error: " . $stmt->error;
@@ -45,6 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -85,7 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="card shadow-lg">
                         <div class="card-body p-5">
                             <h1 class="fs-4 card-title fw-bold mb-4">Doctor Registration</h1>
-                            <?php if (isset($success_message)) : ?>
+                            <?php if ($insert && isset($success_message)) : ?>
                                 <div class="alert alert-success" role="alert">
                                     <?php echo $success_message; ?>
                                 </div>
@@ -129,6 +132,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <input id="email" type="email" class="form-control" name="email" value="<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?>" required>
                                     <div class="invalid-feedback">
                                         Email is invalid
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <div class="mb-2 w-100">
+                                        <label class="text-muted" for="password">Password</label>
+                                    </div>
+                                    <input id="password" type="password" class="form-control" name="password" required>
+                                    <div class="invalid-feedback">
+                                        Password is required
                                     </div>
                                 </div>
 
@@ -186,14 +199,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </p>
 
                                 <div class="align-items-center d-flex">
-                                <a href="http://localhost/LOGINp/59_IceBusters_BnB24/index.html" class="btn btn-primary ms-auto">Register</a>
-
+                                    <button type="submit" class="btn btn-primary ms-auto">Register</button>
                                 </div>
                             </form>
                         </div>
                         <div class="card-footer py-3 border-0">
                             <div class="text-center">
-                                Already have an account? <a href="http://localhost/LOGINp/59_IceBusters_BnB24/doct_reg.php" class="text-dark">Login</a>
+                                Already have an account? <a href="http://localhost/LOGINp/59_IceBusters_BnB24/doct_log.php" class="text-dark">Login</a>
                             </div>
                         </div>
                     </div>

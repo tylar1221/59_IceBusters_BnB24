@@ -1,4 +1,7 @@
+
 <?php
+session_start();
+
 // Database connection
 $servername = "localhost";
 $username = "root";
@@ -11,6 +14,32 @@ $conn = new mysqli($servername, $username, $password, $database);
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Process form submission
+    $drName = $_POST['name'];
+    $patientName = $_POST['patient_name'];
+    $date = $_POST['date'];
+    $timeSlot = $_POST['timeSlot'];
+    $mode = $_POST['mode'];
+    $symptoms = $_POST['symptoms'];
+
+    // Insert appointment into database
+    $sql = "INSERT INTO dr_appointment (doctor_email, patient_name, appointment_date, appointment_time, mode, symptoms) VALUES (?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssssss", $drName, $patientName, $date, $timeSlot, $mode, $symptoms);
+    $stmt->execute();
+
+    // Check if appointment was successfully booked
+    if ($stmt->affected_rows > 0) {
+        $message = "Appointment booked successfully!";
+    } else {
+        $message = "Failed to book appointment. Please try again.";
+    }
+
+    // Close statement
+    $stmt->close();
 }
 
 // Fetch doctor names from the database
@@ -66,6 +95,11 @@ $conn->close();
                     <div class="card shadow-lg">
                         <div class="card-body p-5">
                             <h1 class="fs-4 card-title fw-bold mb-4">Book Appointment</h1>
+                            <?php if (isset($message)): ?>
+                                <div class="alert alert-<?php echo ($message == 'Appointment booked successfully!') ? 'success' : 'danger'; ?>" role="alert">
+                                    <?php echo $message; ?>
+                                </div>
+                            <?php endif; ?>
                             <hr>
                             <form method="POST" class="needs-validation" novalidate="" autocomplete="off" enctype="multipart/form-data">
                                 <div class="mb-3">
@@ -78,6 +112,13 @@ $conn->close();
                                     </select>
                                     <div class="invalid-feedback">
                                         Doctor Name is required
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="mb-2 text-muted" for="patient_name">Patient Name</label>
+                                    <input type="text" class="form-control" id="patient_name" name="patient_name" required>
+                                    <div class="invalid-feedback">
+                                        Patient Name is required
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -101,12 +142,19 @@ $conn->close();
                                         Time Slot is required
                                     </div>
                                 </div>
+                                <div class="mb-3">
+                                    <label class="mb-2 text-muted" for="mode">Mode</label>
+                                    <input type="text" class="form-control" id="mode" name="mode" required>
+                                    <div class="invalid-feedback">
+                                        Mode is required
+                                    </div>
+                                </div>
                                 <p class="form-text text-muted mb-3">
                                     By Booking you agree with our terms and condition.
                                 </p>
                                 <hr>
                                 <div class="align-items-center d-flex">
-                                    <button type="button" class="btn btn-primary ms-auto" onclick="bookAppointment()">
+                                    <button type="submit" class="btn btn-primary ms-auto">
                                         Book
                                     </button>
                                 </div>
@@ -120,42 +168,8 @@ $conn->close();
             </div>
         </div>
     </section>
-
-    <script>
-        function bookAppointment() {
-            const drNameSelect = document.querySelector('[name="name"]');
-            const symptomsTextarea = document.querySelector('[name="symptoms"]');
-            const dateInput = document.querySelector('[name="date"]');
-            const timeSlotInput = document.querySelector('[name="timeSlot"]');
-
-            const selectedDrName = drNameSelect.value;
-            const symptoms = symptomsTextarea.value;
-            const date = dateInput.value;
-            const timeSlot = timeSlotInput.value;
-
-            if (isValidInput(selectedDrName, symptoms, date, timeSlot)) {
-                if (!isEntryExists(selectedDrName, date, timeSlot)) {
-                    alert('Appointment booked successfully!');
-                } else {
-                    alert('Appointment with the same Doctor, Date, and Time Slot already exists. Please choose a different combination.');
-                }
-            } else {
-                alert('Please fill out all required fields.');
-            }
-        }
-
-        function isValidInput(drName, symptoms, date, timeSlot) {
-            return drName.trim() !== '' && symptoms.trim() !== '' && date.trim() !== '' && timeSlot.trim() !== '';
-        }
-
-        function isEntryExists(drName, date, timeSlot) {
-            // Here you can check if the entry already exists in your database
-            // Example:
-            // You can send an AJAX request to your server to check if an entry with the same doctor, date, and time slot exists in your database
-            // If it exists, return true; otherwise, return false.
-            return false; // Placeholder return value
-        }
-    </script>
 </body>
 
 </html>
+```
+

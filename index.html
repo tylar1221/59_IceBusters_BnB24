@@ -27,34 +27,46 @@
                     <img src="images/logo2.png" alt="site logo">
                 </a>
                 <button type="button" class="navbar-show-btn">
-                    <img src = "images/ham-menu-icon.png">
+                    <img src="images/ham-menu-icon.png">
                 </button>
-
+                <!-- Google Translate language selector -->
+                <div id="myid">Choose Language</div>
                 <div class="navbar-collapse bg-white">
                     <button type="button" class="navbar-hide-btn">
-                        <img src = "images/close-icon.png">
+                        <img src="images/close-icon.png">
                     </button>
                     <ul class="navbar-nav">
+                        <!-- Removed the Choose Language div -->
                         <li class="nav-item">
                             <a href="vc.html" class="nav-link">Virtual Counsultat</a>
                         </li>
                         <li class="nav-item">
                             <a href="chatbot.html" class="nav-link">Chat</a>
                         </li>
-
-                        <!-- <li class="nav-item">
-                            <a href="#" class="nav-link">Find Doctors</a>
-                        </li> -->
                         <li class="nav-item">
-                            <a href="http://localhost/LOGINp/59_IceBusters_BnB24/bookap.php" class="nav-link">Book  Appointment</a>
+                            <a href="http://localhost/LOGINp/59_IceBusters_BnB24/bookap.php" class="nav-link">Book Appointment</a>
                         </li>
-
+                        <li class="nav-item">
+                            <a href="http://localhost/LOGINp/59_IceBusters_BnB24/doct_prof.php" class="nav-link">Profile</a>
+                        </li>
                     </ul>
-
                 </div>
             </div>
         </nav>
 
+        <div class="header-inner text-white text-center">
+            <div class="container grid">
+                <div class="header-inner-left">
+                    <h1>your most trusted<br> <span>health partner</span></h1>
+                    <p class="lead">the best match services for you</p>
+                    <p class="text text-md">"CUREHUB: Your trusted health partner in rural India. Quality healthcare via video calls, tailored for you at minimal prices."</p>
+                </div>
+                <div class="header-inner-right">
+                    <img src="images/headder.jpg">
+                </div>
+            </div>
+        </div>
+    </header>
         <div class="header-inner text-white text-center">
             <div class="container grid">
                 <div class="header-inner-left">
@@ -416,6 +428,22 @@
 
 
     <!-- custom js -->
+    <script src="http://translate.google.com/translate_a/element.js?cb=loadGoogleTranslate"></script>
+
+<script>
+
+	function loadGoogleTranslate()
+
+	{
+
+		new google.translate.TranslateElement("myid")
+
+	}
+
+</script>
+
+
+
     <script src="js/script.js"></script>
 </body>
 
